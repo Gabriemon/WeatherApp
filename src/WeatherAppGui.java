@@ -13,108 +13,107 @@ public class WeatherAppGui extends JFrame {
     private JSONObject weatherData;
 
     public WeatherAppGui(){
-        // setup our gui and add a title
+        // Setar a Interface e o título
         super("Weather App");
 
-        // configure gui to end the program's process once it has been closed
+        // configura a interface para encerrar o processo do programa assim que ele for fechado
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        // set the size of our gui (in pixels)
+        // tamanho da interface (em pixels)
         setSize(450, 650);
 
-        // load our gui at the center of the screen
+        // carrega a interface no meio do centro da tela
         setLocationRelativeTo(null);
 
-        // make our layout manager null to manually position our components within the gui
+        // Permite editar o layout manualmente
         setLayout(null);
 
-        // prevent any resize of our gui
+        // mantém o tamanho da interface
         setResizable(false);
 
         addGuiComponents();
     }
 
     private void addGuiComponents(){
-        // search field
+        // campo de pesquisa
         JTextField searchTextField = new JTextField();
 
-        // set the location and size of our component
+        // define a localização e tamanho do componente 
         searchTextField.setBounds(15, 15, 351, 45);
 
-        // change the font style and size
+        // seta o tamanho e estilo da fonte
         searchTextField.setFont(new Font("Dialog", Font.PLAIN, 24));
 
         add(searchTextField);
 
-        // weather image
+        // imagem do clima
         JLabel weatherConditionImage = new JLabel(loadImage("src/assets/cloudy.png"));
         weatherConditionImage.setBounds(0, 125, 450, 217);
         add(weatherConditionImage);
 
-        // temperature text
+        // texto de temperatura
         JLabel temperatureText = new JLabel("10 C");
         temperatureText.setBounds(0, 350, 450, 54);
         temperatureText.setFont(new Font("Dialog", Font.BOLD, 48));
 
-        // center the text
+        // centraliza o texto
         temperatureText.setHorizontalAlignment(SwingConstants.CENTER);
         add(temperatureText);
 
-        // weather condition description
+        // descrição do clima atual
         JLabel weatherConditionDesc = new JLabel("Cloudy");
         weatherConditionDesc.setBounds(0, 405, 450, 36);
         weatherConditionDesc.setFont(new Font("Dialog", Font.PLAIN, 32));
         weatherConditionDesc.setHorizontalAlignment(SwingConstants.CENTER);
         add(weatherConditionDesc);
 
-        // humidity image
+        // imagem de humidade
         JLabel humidityImage = new JLabel(loadImage("src/assets/humidity.png"));
         humidityImage.setBounds(15, 500, 74, 66);
         add(humidityImage);
 
-        // humidity text
+        // texto da hmuidade
         JLabel humidityText = new JLabel("<html><b>Humidity</b> 100%</html>");
         humidityText.setBounds(90, 500, 85, 55);
         humidityText.setFont(new Font("Dialog", Font.PLAIN, 16));
         add(humidityText);
 
-        // windspeed image
+        //  imagem da velocidade do vento
         JLabel windspeedImage = new JLabel(loadImage("src/assets/windspeed.png"));
         windspeedImage.setBounds(220, 500, 74, 66);
         add(windspeedImage);
 
-        // windspeed text
+        // texto da velocidade do vento
         JLabel windspeedText = new JLabel("<html><b>Windspeed</b> 15km/h</html>");
         windspeedText.setBounds(310, 500, 85, 55);
         windspeedText.setFont(new Font("Dialog", Font.PLAIN, 16));
         add(windspeedText);
 
-        // search button
+        // botão de buscar
         JButton searchButton = new JButton(loadImage("src/assets/search.png"));
 
-        // change the cursor to a hand cursor when hovering over this button
+        // muda o cursor para uma mãozinha quando estiver sobre o botão
         searchButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         searchButton.setBounds(375, 13, 47, 45);
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // get location from user
+                // pega a localização inserida pelo usuário
                 String userInput = searchTextField.getText();
 
-                // validate input - remove whitespace to ensure non-empty text
+                // valida o input e remove espaços em branco para assegurar non-empty text
                 if(userInput.replaceAll("\\s", "").length() <= 0){
                     return;
                 }
 
-                // retrieve weather data
+                // pega os dados do clima
                 weatherData = WeatherApp.getWeatherData(userInput);
 
-                // update gui
+                // atualiza a interface
 
-                // update weather image
+                // atualiza a imagem de acordo com a condição do clima
                 String weatherCondition = (String) weatherData.get("weather_condition");
 
-                // depending on the condition, we will update the weather image that corresponds with the condition
                 switch(weatherCondition){
                     case "Clear":
                         weatherConditionImage.setIcon(loadImage("src/assets/clear.png"));
@@ -130,18 +129,18 @@ public class WeatherAppGui extends JFrame {
                         break;
                 }
 
-                // update temperature text
+                // atualiza o texto da temperatura
                 double temperature = (double) weatherData.get("temperature");
                 temperatureText.setText(temperature + " C");
 
-                // update weather condition text
+                // atualiza o texto da condição do clima
                 weatherConditionDesc.setText(weatherCondition);
 
-                // update humidity text
+                // atualiza o texto da humidade
                 long humidity = (long) weatherData.get("humidity");
                 humidityText.setText("<html><b>Humidity</b> " + humidity + "%</html>");
 
-                // update windspeed text
+                // atualiza o texto da velocidade do vento
                 double windspeed = (double) weatherData.get("windspeed");
                 windspeedText.setText("<html><b>Windspeed</b> " + windspeed + "km/h</html>");
             }
@@ -149,13 +148,14 @@ public class WeatherAppGui extends JFrame {
         add(searchButton);
     }
 
-    // used to create images in our gui components
+    // usados para criar imagens nos componentes da interface
     private ImageIcon loadImage(String resourcePath){
         try{
-            // read the image file from the path given
+
+            // Le a imagem de acordo com o caminho apresentado
             BufferedImage image = ImageIO.read(new File(resourcePath));
 
-            // returns an image icon so that our component can render it
+            // retorna um ícone-imagem para que o componente da interface possa renderizá-lo
             return new ImageIcon(image);
         }catch(IOException e){
             e.printStackTrace();
